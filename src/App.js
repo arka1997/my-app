@@ -107,8 +107,8 @@ const handleResumeChange = (e) => {
 
   const handleFileSubmit = async (e) => {
     e.preventDefault();
-    await uploadResume();
-    await uploadExcel();
+    await uploadResume();// Resume is called first to upload the resume first in Server 
+    await uploadExcel();// then Excel makes call to server, and sends mail data.
   };
 
   return (
