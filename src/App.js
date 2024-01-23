@@ -9,6 +9,7 @@ function App() {
   const [typeError, setTypeError] = useState(null);
   const [excelFile, setExcelFile] = useState(null);
   const [excelData, setExcelData] = useState(null);
+  const [resumeFile, setResumeFile] = useState(null);
 
   const handleExcelChange = (e) => {
     const fileTypes = [
@@ -39,6 +40,32 @@ function App() {
       console.log('Please select your file');
     }
   };
+
+const handleResumeChange = (e) => {
+
+  if (e.target.files && e.target.files.length > 0) {
+    setResumeFile(e.target.files[0]);
+  } else {
+    console.log("No file selected");
+  }
+  };
+
+  const uploadResume = async () => {
+      try {
+        if (resumeFile) {
+          const formData = new FormData();
+          formData.append('resume', resumeFile);
+          const response = await axios.post("http://localhost:3001/uploadResume", formData);
+          if (response.ok) {
+            console.log('Resume file uploaded successfully!');
+          } else {
+            console.error('Failed to upload resume file.');
+          }
+        }
+      }catch(error){
+        setTypeError('Error during file upload:', error);
+      }
+    }
 
   const uploadExcel = async () => {
     try {
@@ -80,6 +107,7 @@ function App() {
   const handleFileSubmit = async (e) => {
     e.preventDefault();
     await uploadExcel();
+    await uploadResume();
   };
 
   return (
@@ -110,6 +138,19 @@ function App() {
             <li>{excelSize}</li>
           </div>
         </div>
+        <input
+              type="file"
+              id="resume-upload"
+              // className="hidden"
+              accept=".pdf, .doc, .docx"
+              required
+              onChange = {handleResumeChange}
+            />
+            <p className="file-name">
+              {resumeFile
+                ? `Selected file: ${resumeFile.name}`
+                : 'No file selected'}
+            </p> 
         <button type="submit" className="btn btn-success btn-lg">
           UPLOAD
         </button>
