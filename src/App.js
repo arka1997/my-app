@@ -78,9 +78,9 @@ const handleResumeChange = (e) => {
 
         if (data && data.length > 0) {
           data.forEach((individualExcelData) => {
-            const { company_name, email_of_employees } = individualExcelData;
-            if (company_name && email_of_employees) {
-              mailParams(company_name, email_of_employees);
+            const { company_name, email_of_employees, role } = individualExcelData;
+            if (company_name && email_of_employees && role) {
+              mailParams(company_name, email_of_employees, role);
             }
           });
         }
@@ -92,11 +92,12 @@ const handleResumeChange = (e) => {
     }
   };
 
-  const mailParams = async (company_name, email_of_employees) => {
+  const mailParams = async (company_name, email_of_employees, role) => {
     try {
       const response = await axios.post('http://localhost:3001', {
         company_name,
         email_of_employees,
+        role,
       });
       console.log(response.status);
     } catch (error) {
