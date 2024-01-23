@@ -9,7 +9,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: #fefefe;
   overflow: hidden;
-  display: block;
   font-family: 'Oswald', sans-serif !important;
   display: flex;
   align-items: center;
@@ -57,17 +56,22 @@ body {
   align-items: center;
 }
 
-.alert{
-} 
-
 .alert-danger{
-
   border-radius: 20px;
   justify-content: center;
   align-items: center;
   padding: 20px;
   background-color: #f0b5b5;
   background-image: linear-gradient(rgb(255, 169, 169), rgb(244, 209, 191), rgb(250, 184, 174));
+}
+.alert-success{
+  border-radius: 20px;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: #98f645;
+  background-image: linear-gradient(rgb(157, 226, 78), rgb(139, 248, 118), rgb(140, 225, 71));
+
 }
 .upload-container {
   text-align: center;

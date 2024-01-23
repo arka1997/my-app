@@ -7,6 +7,8 @@ function App() {
   const [excelName, setExcelName] = useState(null);
   const [excelSize, setExcelSize] = useState(null);
   const [typeError, setTypeError] = useState(null);
+  
+  const [typeSuccess, setTypeSuccess] = useState(null);
   const [excelFile, setExcelFile] = useState(null);
   const [excelData, setExcelData] = useState(null);
   const [resumeFile, setResumeFile] = useState(null);
@@ -56,8 +58,8 @@ const handleResumeChange = (e) => {
           const formData = new FormData();
           formData.append('resume', resumeFile);
           const response = await axios.post("http://localhost:3001/uploadResume", formData);
-          if (response.ok) {
-            console.log('Resume file uploaded successfully!');
+          if (response.status) {
+            setTypeSuccess('Resume file uploaded successfully!');
           } else {
             console.error('Failed to upload resume file.');
           }
@@ -74,34 +76,32 @@ const handleResumeChange = (e) => {
         const workSheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[workSheetName];
         const data = XLSX.utils.sheet_to_json(worksheet);
-        setExcelData(data.slice(0, 10));
-
         if (data && data.length > 0) {
-          data.forEach((individualExcelData) => {
+          const excelDataArray = data.map((individualExcelData) => {
             const { company_name, email_of_employees, role } = individualExcelData;
             if (company_name && email_of_employees && role) {
-              mailParams(company_name, email_of_employees, role);
+              return {
+                company_name,
+                email_of_employees,
+                role,
+              }
             }
+            return null;// To Skip invalid/Incomplete data rows
           });
+          const validExcelDataArray = excelDataArray.filter((data) => data !== null);
+          if (validExcelDataArray.length > 0) {
+            // Send all Excel data to the server in a single request
+            await axios.post('http://localhost:3001/excelUpload', {
+            data: validExcelDataArray,
+          });
+          setTypeSuccess('Data sent successfully');
+          }
         }
       } else {
         setTypeError('Null excelFile found');
       }
     } catch (error) {
       setTypeError(`Error during file upload: ${error}`);
-    }
-  };
-
-  const mailParams = async (company_name, email_of_employees, role) => {
-    try {
-      const response = await axios.post('http://localhost:3001', {
-        company_name,
-        email_of_employees,
-        role,
-      });
-      console.log(response.status);
-    } catch (error) {
-      setTypeError(`Error sending data to backend: ${error}`);
     }
   };
 
@@ -139,10 +139,13 @@ const handleResumeChange = (e) => {
             <li>{excelSize}</li>
           </div>
         </div>
+        <label htmlFor="resume-upload" className="upload-btn">
+          <span>Select Resume</span>
+        </label>
         <input
               type="file"
               id="resume-upload"
-              // className="hidden"
+              className="hidden"
               accept=".pdf, .doc, .docx"
               required
               onChange = {handleResumeChange}
@@ -158,6 +161,11 @@ const handleResumeChange = (e) => {
         {typeError && (
           <div className="alert alert-danger" role="alert">
             {typeError}
+          </div>
+        )}
+        {typeSuccess && (
+          <div className="alert alert-success" role="alert">
+            {typeSuccess}
           </div>
         )}
       </form>
