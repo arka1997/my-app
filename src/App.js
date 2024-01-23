@@ -107,8 +107,8 @@ const handleResumeChange = (e) => {
 
   const handleFileSubmit = async (e) => {
     e.preventDefault();
-    await uploadExcel();
     await uploadResume();
+    await uploadExcel();
   };
 
   return (
