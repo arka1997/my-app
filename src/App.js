@@ -7,11 +7,32 @@ function App() {
   const [excelName, setExcelName] = useState(null);
   const [excelSize, setExcelSize] = useState(null);
   const [typeError, setTypeError] = useState(null);
-  
   const [typeSuccess, setTypeSuccess] = useState(null);
   const [excelFile, setExcelFile] = useState(null);
   const [excelData, setExcelData] = useState(null);
   const [resumeFile, setResumeFile] = useState(null);
+
+  const [name, setName] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [yoe, setYoe] = useState(null);
+  const [currentCompany, setCurrentCompany] = useState(null);
+  const [password, setPassword] = useState(null);
+  
+  const handleNameChange = (event) => {
+	  setName(event.target.value);// To fetch the input values
+  }
+  const handleEmailChange = (event) => {
+	  setEmail(event.target.value);
+  }
+  const handleYoeChange = (event) => {
+	  setYoe(event.target.value);
+  }
+  const handleCurrentCompanyChange = (event) => {
+	  setCurrentCompany(event.target.value);
+  }
+  const handlePasswordChange = (event) => {
+	  setPassword(event.target.value);
+  }
 
   const handleExcelChange = (e) => {
     const fileTypes = [
@@ -78,7 +99,7 @@ const handleResumeChange = (e) => {
         const data = XLSX.utils.sheet_to_json(worksheet);
         if (data && data.length > 0) {
           const excelDataArray = data.map((individualExcelData) => {
-            const { company_name, email_of_employees, role } = individualExcelData;
+            const { company_name, email_of_employees, role} = individualExcelData;
             if (company_name && email_of_employees && role) {
               return {
                 company_name,
@@ -92,7 +113,12 @@ const handleResumeChange = (e) => {
           if (validExcelDataArray.length > 0) {
             // Send all Excel data to the server in a single request
             await axios.post('http://localhost:3001/excelUpload', {
-            data: validExcelDataArray,
+              data: validExcelDataArray,
+              name:name,
+              password: password,
+              sender_mail: email,
+              yoe: yoe,
+              currentCompany: currentCompany,
           });
           setTypeSuccess('Data sent successfully');
           }
@@ -115,6 +141,81 @@ const handleResumeChange = (e) => {
     <div className="wrapper">
       <h3>Upload & View Excel Sheets</h3>
       <form className="form-group custom-form" onSubmit={handleFileSubmit}>
+      
+      <div className="form-control" htmlFor="password-upload">
+        <label>App Password</label>
+      </div>
+      <div className="form-beautify">
+          <input
+            type="password"
+            name="password"
+            className="password-upload"
+            placeholder="PASSWORD.."
+            onChange={handlePasswordChange}
+          />
+      </div>
+      <div className="form-control" htmlFor="name-upload">
+        <label>Name</label>
+      </div>
+      <div className="form-beautify">
+          <input
+            type="text"
+            name="name"
+            className="name-upload"
+            placeholder="Your Name.."
+            onChange={handleNameChange}
+          />
+      </div>
+      <div className="form-control" htmlFor="email-upload">
+        <label>Email</label>
+      </div>
+      <div className="form-beautify">
+          <input
+            type="email"
+            name="email"
+            className="email-upload"
+            placeholder="Your Email.."
+            onChange={handleEmailChange}
+          />
+      </div>
+      <div className="form-control" htmlFor="yoe-upload">
+        <label>Years Of Experience</label>
+      </div>
+      <div className="form-beautify">
+          <input
+            type="number"
+            name="yoe"
+            className="yoe-upload"
+            placeholder="Years Of Experience.."
+            onChange={handleYoeChange}
+          />
+      </div>
+      <div className="form-control" htmlFor="currentCompany-upload">
+        <label>Current Company</label>
+      </div>
+      <div className="form-beautify">
+          <input
+            type="text"
+            name="currentCompany"
+            className="currentCompany-upload"
+            placeholder="Current Company.."
+            onChange={handleCurrentCompanyChange}
+          />
+      </div>
+
+      <div className="form-control" htmlFor="techStack-upload">
+        <label>Tech Stack</label>
+      </div>
+      <div className="form-beautify">
+          <input
+            type="text"
+            name="techStack"
+            className="techStack-upload"
+            placeholder="Tech Stack.."
+            // onChange={handleTechStackChange}
+          />
+      </div>
+      
         <label htmlFor="excel-upload" className="upload-btn">
           <span>Select Excel</span>
         </label>

@@ -2,17 +2,19 @@ html {
   font-size: 62.5%;
 }
 
+
 body {
   margin: 0;
   color: #444;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #fefefe;
   overflow: hidden;
   font-family: 'Oswald', sans-serif !important;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 100vh;
+  background: #c5d6ff;
 }
 
 .dashboard {
@@ -32,20 +34,19 @@ body {
 }
 
 .wrapper{
-  width: 100%;
-  max-width: 1200px;
-  margin: auto;
-  overflow-x: hidden;
+  border-radius: 25px;
   padding: 20px;
+  margin: auto;
+  background-color: #e7e5e5;
 }
 
 .custom-form{
   width: 500px;
 }
 
-.btn{
+/* .btn{
   margin: 10px 0;
-}
+} */
 
 .viewer{
   width: 100%;
@@ -91,11 +92,157 @@ body {
   background-color: #2980b9;
 }
 
-.hidden {
+/* .hidden {
   display: none;
-}
+} */
 
 .file-name {
   margin-top: 10px;
   font-size: 14px;
 }
+
+.form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px dashed #1475cf;
+  height: 300px;
+  width: 500px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+/* Add this CSS to your existing stylesheet or create a new one */
+
+.form-beautify {
+  margin-bottom: 15px;
+}
+
+.form-beautify label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.form-beautify input {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Optional: Style for hover and focus states */
+.form-beautify input:hover,
+.form-beautify input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+
+/* ::selection{
+  color: #fff;
+  background: #6990F2;
+}
+.wrapper{
+  width: 430px;
+  background: #fff;
+  border-radius: 5px;
+  padding: 30px;
+  box-shadow: 7px 7px 12px rgba(0,0,0,0.05);
+}
+.wrapper header{
+  color: #6990F2;
+  font-size: 27px;
+  font-weight: 600;
+  text-align: center;
+}
+.wrapper form{
+  height: 167px;
+  display: flex;
+  cursor: pointer;
+  margin: 30px 0;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 5px;
+  border: 2px dashed #6990F2;
+}
+form :where(i, p){
+  color: #6990F2;
+}
+form i{
+  font-size: 50px;
+}
+form p{
+  margin-top: 15px;
+  font-size: 16px;
+}
+
+section .row{
+  margin-bottom: 10px;
+  background: #E9F0FF;
+  list-style: none;
+  padding: 15px 20px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+section .row i{
+  color: #6990F2;
+  font-size: 30px;
+}
+section .details span{
+  font-size: 14px;
+}
+.progress-area .row .content{
+  width: 100%;
+  margin-left: 15px;
+}
+.progress-area .details{
+  display: flex;
+  align-items: center;
+  margin-bottom: 7px;
+  justify-content: space-between;
+}
+.progress-area .content .progress-bar{
+  height: 6px;
+  width: 100%;
+  margin-bottom: 4px;
+  background: #fff;
+  border-radius: 30px;
+}
+.content .progress-bar .progress{
+  height: 100%;
+  width: 0%;
+  background: #6990F2;
+  border-radius: inherit;
+}
+.uploaded-area{
+  max-height: 232px;
+  overflow-y: scroll;
+}
+.uploaded-area.onprogress{
+  max-height: 150px;
+}
+.uploaded-area::-webkit-scrollbar{
+  width: 0px;
+}
+.uploaded-area .row .content{
+  display: flex;
+  align-items: center;
+}
+.uploaded-area .row .details{
+  display: flex;
+  margin-left: 15px;
+  flex-direction: column;
+}
+.uploaded-area .row .details .size{
+  color: #404040;
+  font-size: 11px;
+}
+.uploaded-area i.fa-check{
+  font-size: 16px;
+} */
