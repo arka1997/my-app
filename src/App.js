@@ -17,7 +17,8 @@ function App() {
   const [yoe, setYoe] = useState(null);
   const [currentCompany, setCurrentCompany] = useState(null);
   const [password, setPassword] = useState(null);
-  
+  const [techStacks, setTechStacks] = useState(['']);
+
   const handleNameChange = (event) => {
 	  setName(event.target.value);// To fetch the input values
   }
@@ -33,6 +34,15 @@ function App() {
   const handlePasswordChange = (event) => {
 	  setPassword(event.target.value);
   }
+  const handleTechStackChange = (index, value) => {
+    const updatedTechStacks = [...techStacks];
+    updatedTechStacks[index] = value;
+    setTechStacks(updatedTechStacks);
+  };
+
+  const handleAddTechStack = () => {
+    setTechStacks([...techStacks, '']); // Add a new empty tech stack input box
+  };
 
   const handleExcelChange = (e) => {
     const fileTypes = [
@@ -89,7 +99,7 @@ const handleResumeChange = (e) => {
         setTypeError('Error during file upload:', error);
       }
     }
-
+    
   const uploadExcel = async () => {
     try {
       if (excelFile !== null) {
@@ -109,19 +119,7 @@ const handleResumeChange = (e) => {
             }
             return null;// To Skip invalid/Incomplete data rows
           });
-          const validExcelDataArray = excelDataArray.filter((data) => data !== null);
-          if (validExcelDataArray.length > 0) {
-            // Send all Excel data to the server in a single request
-            await axios.post('http://localhost:3001/excelUpload', {
-              data: validExcelDataArray,
-              name:name,
-              password: password,
-              sender_mail: email,
-              yoe: yoe,
-              currentCompany: currentCompany,
-          });
-          setTypeSuccess('Data sent successfully');
-          }
+          setExcelData(excelDataArray);
         }
       } else {
         setTypeError('Null excelFile found');
@@ -130,11 +128,35 @@ const handleResumeChange = (e) => {
       setTypeError(`Error during file upload: ${error}`);
     }
   };
+  const uploadTechStack = async () => {
+    const nonEmptyTechStacks = techStacks.filter((tech) => tech.trim() !== '');
+    console.log(nonEmptyTechStacks);
+    setTechStacks(nonEmptyTechStacks);
+    console.log(techStacks);
+  }
 
+  const uploadDetailsToServer = async () => {
+    const validExcelDataArray = excelData.filter((data) => data !== null);
+    if (validExcelDataArray.length > 0) {
+      // Send all Excel data to the server in a single request
+      await axios.post('http://localhost:3001/excelUpload', {
+        excelData: validExcelDataArray,
+        name:name,
+        password: password,
+        senderMail: email,
+        yoe: yoe,
+        currentCompany: currentCompany,
+        techStack: techStacks,
+      });
+    setTypeSuccess('Data sent successfully');
+    }
+  }
   const handleFileSubmit = async (e) => {
     e.preventDefault();
     await uploadResume();// Resume is called first to upload the resume first in Server 
     await uploadExcel();// then Excel makes call to server, and sends mail data.
+    await uploadTechStack();
+    await uploadDetailsToServer();
   };
 
   return (
@@ -202,19 +224,22 @@ const handleResumeChange = (e) => {
             onChange={handleCurrentCompanyChange}
           />
       </div>
-
       <div className="form-control" htmlFor="techStack-upload">
-        <label>Tech Stack</label>
+        <label>Tech Stacks</label>
       </div>
-      <div className="form-beautify">
+      {techStacks.map((tech, index) => (
+        <div key={index} className="form-beautify">
           <input
             type="text"
-            name="techStack"
+            name={`techStack-${index}`}
             className="techStack-upload"
             placeholder="Tech Stack.."
-            // onChange={handleTechStackChange}
+            value={tech}
+            onChange={(e) => handleTechStackChange(index, e.target.value)}
           />
-      </div>
+        </div>
+      ))}
+      <button onClick={handleAddTechStack}>+ Add Tech Stack</button>
       
         <label htmlFor="excel-upload" className="upload-btn">
           <span>Select Excel</span>
@@ -282,13 +307,13 @@ const handleResumeChange = (e) => {
                 </tr>
               </thead>
               <tbody>
-                {excelData.map((individualExcelData, index) => (
+                {/* {excelData.map((individualExcelData, index) => (
                   <tr key={index}>
                     {Object.keys(individualExcelData).map((key) => (
                       <td key={key}>{individualExcelData[key]}</td>
                     ))}
                   </tr>
-                ))}
+                ))} */}
               </tbody>
             </table>
           </div>
