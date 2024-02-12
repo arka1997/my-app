@@ -89,7 +89,7 @@ const handleResumeChange = (e) => {
           }
         }
       }catch(error){
-        setTypeError('Error during file upload:', error);
+        setTypeError('Error during file upload:1997', error);
       }
     }
     
@@ -128,9 +128,7 @@ const handleResumeChange = (e) => {
 
   const uploadTechStack = async () => {
     const nonEmptyTechStacks = techStacks.filter((tech) => tech.trim() !== '');
-    console.log(nonEmptyTechStacks);
     setTechStacks(nonEmptyTechStacks);
-    console.log(techStacks);
   }
 
   const uploadDetailsToServer = async (e) => {
@@ -165,7 +163,6 @@ const handleResumeChange = (e) => {
     await uploadResume();// Resume is called first to upload the resume first in Server 
     await uploadExcel();// then Excel makes call to server, and sends mail data.
     await uploadTechStack();
-    await uploadDetailsToServer();
   };
 
   return (
@@ -173,8 +170,8 @@ const handleResumeChange = (e) => {
       <h3>Upload & View Excel Sheets</h3>
       <form className="form-group custom-form" onSubmit={e => handleFileSubmit(e)}>
       
-      <div className="form-control" htmlFor="password-upload">
-        <label>App Password</label>
+      <div className="form-control" >
+        <label htmlFor="password-upload">App Password</label>
       </div>
       <div className="form-beautify">
           <input
@@ -185,8 +182,8 @@ const handleResumeChange = (e) => {
             onChange={handlePasswordChange}
           />
       </div>
-      <div className="form-control" htmlFor="name-upload">
-        <label>Full Name</label>
+      <div className="form-control" >
+        <label htmlFor="name-upload">Full Name</label>
       </div>
       <div className="form-beautify">
           <input
@@ -197,8 +194,8 @@ const handleResumeChange = (e) => {
             onChange={handleNameChange}
           />
       </div>
-      <div className="form-control" htmlFor="email-upload">
-        <label>Email</label>
+      <div className="form-control">
+        <label htmlFor="email-upload">Email</label>
       </div>
       <div className="form-beautify">
           <input
@@ -209,8 +206,8 @@ const handleResumeChange = (e) => {
             onChange={handleEmailChange}
           />
       </div>
-      <div className="form-control" htmlFor="yoe-upload">
-        <label>Years Of Experience</label>
+      <div className="form-control" >
+        <label htmlFor="yoe-upload">Years Of Experience</label>
       </div>
       <div className="form-beautify">
           <input
@@ -221,8 +218,8 @@ const handleResumeChange = (e) => {
             onChange={handleYoeChange}
           />
       </div>
-      <div className="form-control" htmlFor="currentCompany-upload">
-        <label>Current Company</label>
+      <div className="form-control" >
+        <label htmlFor="currentCompany-upload">Current Company</label>
       </div>
       <div className="form-beautify">
           <input
@@ -233,8 +230,8 @@ const handleResumeChange = (e) => {
             onChange={handleCurrentCompanyChange}
           />
       </div>
-      <div className="form-control" htmlFor="techStack-upload">
-        <label>Tech Stacks</label>
+      <div className="form-control" >
+        <label htmlFor="techStack-upload">Tech Stacks</label>
       </div>
       {techStacks.map((tech, index) => (
         <div key={index} className="form-beautify">
@@ -290,8 +287,9 @@ const handleResumeChange = (e) => {
                 ? `Selected file: ${resumeFile.name}`
                 : 'No file selected'}
             </p> 
+            
         <button type="submit" className="btn btn-success btn-lg">
-          UPLOAD
+          Excel Data Load
         </button>
         {typeError && (
           <div className="alert alert-danger" role="alert">
@@ -304,6 +302,10 @@ const handleResumeChange = (e) => {
           </div>
         )}
       </form>
+      
+      <button type="submit" className="btn btn-success btn-lg" onClick = {uploadDetailsToServer}>
+          SendMail
+        </button>
       <div className="viewer">
         {excelData ? (
           <div className="table-responsive">
@@ -316,13 +318,13 @@ const handleResumeChange = (e) => {
                 </tr>
               </thead>
               <tbody>
-                {/* {excelData.map((individualExcelData, index) => (
+                 {excelData.map((individualExcelData, index) => (
                   <tr key={index}>
                     {Object.keys(individualExcelData).map((key) => (
                       <td key={key}>{individualExcelData[key]}</td>
                     ))}
                   </tr>
-                ))} */}
+                ))} 
               </tbody>
             </table>
           </div>
