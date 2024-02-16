@@ -3,20 +3,21 @@ import * as XLSX from 'xlsx';
 import axios from 'axios';
 
 function App() {
-  const [yoe, setYoe] = useState(null);
-  const [name, setName] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
   const [excelType, setExcelType] = useState(null);
   const [excelName, setExcelName] = useState(null);
   const [excelSize, setExcelSize] = useState(null);
   const [typeError, setTypeError] = useState(null);
+  const [typeSuccess, setTypeSuccess] = useState(null);
   const [excelFile, setExcelFile] = useState(null);
   const [excelData, setExcelData] = useState(null);
   const [resumeFile, setResumeFile] = useState(null);
-  const [techStacks, setTechStacks] = useState(['']);
-  const [typeSuccess, setTypeSuccess] = useState(null);
+
+  const [name, setName] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [yoe, setYoe] = useState(null);
   const [currentCompany, setCurrentCompany] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [techStacks, setTechStacks] = useState(['']);
 
   const handleNameChange = (event) => {
 	  setName(event.target.value);// To fetch the input values
@@ -38,6 +39,11 @@ function App() {
     updatedTechStacks[index] = value;
     setTechStacks(updatedTechStacks);
   };
+
+  const handleAddTechStack = () => {
+    setTechStacks([...techStacks, '']); // Add a new empty tech stack input box
+  };
+
   const handleExcelChange = (e) => {
     const fileTypes = [
       'application/vnd.ms-excel',
@@ -46,6 +52,7 @@ function App() {
     ];
 
     const selectedExcel = e.target.files[0];
+
     setExcelName(selectedExcel.name);
     setExcelType(selectedExcel.type);
     setExcelSize(selectedExcel.size);
@@ -89,7 +96,7 @@ const handleResumeChange = (e) => {
           }
         }
       }catch(error){
-        setTypeError('Error during file upload:1997', error);
+        setTypeError('Error during file upload:', error);
       }
     }
     
@@ -121,57 +128,40 @@ const handleResumeChange = (e) => {
       setTypeError(`Error during file upload: ${error}`);
     }
   };
-  
-  const handleAddTechStack = () => {
-    setTechStacks([...techStacks, '']); // Add a new empty tech stack input box
-  };
-
   const uploadTechStack = async () => {
     const nonEmptyTechStacks = techStacks.filter((tech) => tech.trim() !== '');
     setTechStacks(nonEmptyTechStacks);
   }
 
-  const uploadDetailsToServer = async (e) => {
-    if (typeof e !== 'undefined' && e.preventDefault) {
-      e.preventDefault();
-    }
-    if(excelData){
-      const validExcelDataArray = excelData.filter((data) => data !== null);
-      if (validExcelDataArray.length > 0) {
-        // Send all Excel data to the server in a single request
-        await axios.post('http://localhost:3001/excelUpload', {
-          excelData: validExcelDataArray,
-          name:name,
-          password: password,
-          senderMail: email,
-          yoe: yoe,
-          currentCompany: currentCompany,
-          techStack: techStacks,
-        });
-      setTypeSuccess('Data sent successfully');
-      }else{
-        setTypeError('Empty Data Array');
-      }
-    }else{
-      setTypeError('Empty Data');
+  const uploadDetailsToServer = async () => {
+    if (excelData) {
+      // Send all Excel data to the server in a single request
+      await axios.post('http://localhost:3001/excelUpload', {
+        excelData,
+        name:name,
+        password: password,
+        senderMail: email,
+        yoe: yoe,
+        currentCompany: currentCompany,
+        techStack: techStacks,
+      });
+    setTypeSuccess('Data sent successfully');
     }
   }
   const handleFileSubmit = async (e) => {
-    if (typeof e !== 'undefined' && e.preventDefault) {
-      e.preventDefault();
-    }
-    await uploadResume();// Resume is called first to upload the resume first in Server 
-    await uploadExcel();// then Excel makes call to server, and sends mail data.
-    await uploadTechStack();
+    e.preventDefault();
+    const promise = uploadResume();// Resume is called first to upload the resume first in Server 
+    promise.then(uploadExcel());// then Excel makes call to server, and sends mail data.
+    promise.then(uploadTechStack());
+    promise.then(uploadDetailsToServer());
   };
-
   return (
     <div className="wrapper">
       <h3>Upload & View Excel Sheets</h3>
-      <form className="form-group custom-form" onSubmit={e => handleFileSubmit(e)}>
+      <form className="form-group custom-form" onSubmit={handleFileSubmit}>
       
-      <div className="form-control" >
-        <label htmlFor="password-upload">App Password</label>
+      <div className="form-control" htmlFor="password-upload">
+        <label>App Password</label>
       </div>
       <div className="form-beautify">
           <input
@@ -182,20 +172,20 @@ const handleResumeChange = (e) => {
             onChange={handlePasswordChange}
           />
       </div>
-      <div className="form-control" >
-        <label htmlFor="name-upload">Full Name</label>
+      <div className="form-control" htmlFor="name-upload">
+        <label>Name</label>
       </div>
       <div className="form-beautify">
           <input
             type="text"
             name="name"
             className="name-upload"
-            placeholder="Please Enter Full Name.."
+            placeholder="Your Name.."
             onChange={handleNameChange}
           />
       </div>
-      <div className="form-control">
-        <label htmlFor="email-upload">Email</label>
+      <div className="form-control" htmlFor="email-upload">
+        <label>Email</label>
       </div>
       <div className="form-beautify">
           <input
@@ -206,8 +196,8 @@ const handleResumeChange = (e) => {
             onChange={handleEmailChange}
           />
       </div>
-      <div className="form-control" >
-        <label htmlFor="yoe-upload">Years Of Experience</label>
+      <div className="form-control" htmlFor="yoe-upload">
+        <label>Years Of Experience</label>
       </div>
       <div className="form-beautify">
           <input
@@ -218,8 +208,8 @@ const handleResumeChange = (e) => {
             onChange={handleYoeChange}
           />
       </div>
-      <div className="form-control" >
-        <label htmlFor="currentCompany-upload">Current Company</label>
+      <div className="form-control" htmlFor="currentCompany-upload">
+        <label>Current Company</label>
       </div>
       <div className="form-beautify">
           <input
@@ -230,8 +220,8 @@ const handleResumeChange = (e) => {
             onChange={handleCurrentCompanyChange}
           />
       </div>
-      <div className="form-control" >
-        <label htmlFor="techStack-upload">Tech Stacks</label>
+      <div className="form-control" htmlFor="techStack-upload">
+        <label>Tech Stacks</label>
       </div>
       {techStacks.map((tech, index) => (
         <div key={index} className="form-beautify">
@@ -287,9 +277,8 @@ const handleResumeChange = (e) => {
                 ? `Selected file: ${resumeFile.name}`
                 : 'No file selected'}
             </p> 
-            
         <button type="submit" className="btn btn-success btn-lg">
-          Excel Data Load
+          UPLOAD
         </button>
         {typeError && (
           <div className="alert alert-danger" role="alert">
@@ -302,10 +291,6 @@ const handleResumeChange = (e) => {
           </div>
         )}
       </form>
-      
-      <button type="submit" className="btn btn-success btn-lg" onClick = {uploadDetailsToServer}>
-          SendMail
-        </button>
       <div className="viewer">
         {excelData ? (
           <div className="table-responsive">
@@ -318,13 +303,13 @@ const handleResumeChange = (e) => {
                 </tr>
               </thead>
               <tbody>
-                 {excelData.map((individualExcelData, index) => (
+                {excelData.map((individualExcelData, index) => (
                   <tr key={index}>
                     {Object.keys(individualExcelData).map((key) => (
                       <td key={key}>{individualExcelData[key]}</td>
                     ))}
                   </tr>
-                ))} 
+                ))}
               </tbody>
             </table>
           </div>
