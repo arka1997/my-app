@@ -9,7 +9,6 @@ function App() {
   const [typeError, setTypeError] = useState(null);
   const [typeSuccess, setTypeSuccess] = useState(null);
   const [excelFile, setExcelFile] = useState(null);
-  const [excelData, setExcelData] = useState(null);
   const [resumeFile, setResumeFile] = useState(null);
 
   const [name, setName] = useState(null);
@@ -40,7 +39,7 @@ function App() {
     setTechStacks(updatedTechStacks);
   };
 
-  const handleAddTechStack = () => {
+  const handleAddTechStack = (e) => {
     setTechStacks([...techStacks, '']); // Add a new empty tech stack input box
   };
 
@@ -101,7 +100,8 @@ const handleResumeChange = (e) => {
     }
     
   const uploadExcel = async () => {
-    try {
+    return new Promise((resolve,reject) => {
+      try {
       if (excelFile !== null) {
         const workbook = XLSX.read(excelFile, { type: 'buffer' });
         const workSheetName = workbook.SheetNames[0];
@@ -119,21 +119,27 @@ const handleResumeChange = (e) => {
             }
             return null;// To Skip invalid/Incomplete data rows
           });
-          setExcelData(excelDataArray);
+          // setExcelData(excelDataArray); ??Check?? if commented, then no error or not
+          resolve(excelDataArray);
         }
       } else {
         setTypeError('Null excelFile found');
+        reject('Null excelFile found');
       }
     } catch (error) {
       setTypeError(`Error during file upload: ${error}`);
+      reject("Error");
     }
+  });
   };
+  
   const uploadTechStack = async () => {
     const nonEmptyTechStacks = techStacks.filter((tech) => tech.trim() !== '');
     setTechStacks(nonEmptyTechStacks);
   }
 
-  const uploadDetailsToServer = async () => {
+  const uploadDetailsToServer = async (excelData) => {
+    console.log(excelData);
     if (excelData) {
       // Send all Excel data to the server in a single request
       await axios.post('http://localhost:3001/excelUpload', {
@@ -150,10 +156,25 @@ const handleResumeChange = (e) => {
   }
   const handleFileSubmit = async (e) => {
     e.preventDefault();
-    const promise = uploadResume();// Resume is called first to upload the resume first in Server 
-    promise.then(uploadExcel());// then Excel makes call to server, and sends mail data.
-    promise.then(uploadTechStack());
-    promise.then(uploadDetailsToServer());
+    const promise = uploadResume();// then Excel makes call to server, and sends mail data.
+    promise
+    .then(() =>{
+      return uploadTechStack()
+    })
+    .then((loadedData) =>{
+      return uploadExcel(loadedData)
+    })
+    .then((loadedData) =>{
+      loadedData.forEach((datas) => {
+        const { company_name, email_of_employees, role} = datas; 
+        console.log('Excel data loaded2:', company_name, email_of_employees,role);
+      });
+      return uploadDetailsToServer(loadedData)
+    })
+    .catch((error) => {
+      // Handle errors, if any, across the entire chain
+      console.error('Error:', error);
+    });
   };
   return (
     <div className="wrapper">
@@ -220,8 +241,8 @@ const handleResumeChange = (e) => {
             onChange={handleCurrentCompanyChange}
           />
       </div>
-      <div className="form-control" htmlFor="techStack-upload">
-        <label>Tech Stacks</label>
+      <div className="form-control" >
+        <label htmlFor="techStack-upload">Tech Stacks</label>
       </div>
       {techStacks.map((tech, index) => (
         <div key={index} className="form-beautify">
@@ -291,32 +312,7 @@ const handleResumeChange = (e) => {
           </div>
         )}
       </form>
-      <div className="viewer">
-        {excelData ? (
-          <div className="table-responsive">
-            <table className="table">
-              <thead>
-                <tr>
-                  {Object.keys(excelData[1]).map((key) => (
-                    <th key={key}>{key}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {excelData.map((individualExcelData, index) => (
-                  <tr key={index}>
-                    {Object.keys(individualExcelData).map((key) => (
-                      <td key={key}>{individualExcelData[key]}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div>No File is uploaded yet!</div>
-        )}
-      </div>
+      
     </div>
   );
 }

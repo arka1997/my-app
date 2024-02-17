@@ -17,7 +17,7 @@ root.render(
     {/* <Counter /> */}
     {/* <Xyz /> */}
     {/* <CallbackHell /> */}
-    <Promises/>
+    {/* <Promises/> */}
     </BrowserRouter>
   </React.StrictMode>
 );
