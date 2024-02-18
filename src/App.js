@@ -127,8 +127,8 @@ const handleResumeChange = (e) => {
         reject('Null excelFile found');
       }
     } catch (error) {
-      setTypeError(`Error during file upload: ${error}`);
-      reject("Error");
+      // setTypeError(`Error during file upload: ${error}`);
+      reject("Error: " + error);
     }
   });
   };
@@ -165,10 +165,6 @@ const handleResumeChange = (e) => {
       return uploadExcel(loadedData)
     })
     .then((loadedData) =>{
-      loadedData.forEach((datas) => {
-        const { company_name, email_of_employees, role} = datas; 
-        console.log('Excel data loaded2:', company_name, email_of_employees,role);
-      });
       return uploadDetailsToServer(loadedData)
     })
     .catch((error) => {
