@@ -87,7 +87,7 @@ const handleResumeChange = (e) => {
         if (resumeFile) {
           const formData = new FormData();
           formData.append('resume', resumeFile);
-          const response = await axios.post("http://localhost:3001/uploadResume", formData);
+          const response = await axios.post("https://expressflash.onrender.com/uploadResume", formData);
           if (response.status) {
             setTypeSuccess('Resume file uploaded successfully!');
           } else {
@@ -142,7 +142,7 @@ const handleResumeChange = (e) => {
     console.log(excelData);
     if (excelData) {
       // Send all Excel data to the server in a single request
-      await axios.post('http://localhost:3001/excelUpload', {
+      await axios.post('https://expressflash.onrender.com/excelUpload', {
         excelData,
         name:name,
         password: password,
