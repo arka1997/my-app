@@ -16,7 +16,9 @@ function App() {
   const [yoe, setYoe] = useState(null);
   const [currentCompany, setCurrentCompany] = useState(null);
   const [password, setPassword] = useState(null);
-  const [techStacks, setTechStacks] = useState(['']);
+  
+  const [techs, setTech] = useState('');
+  const [techStacks, setTechStacks] = useState(["Techs like"]);
 
   const handleNameChange = (event) => {
 	  setName(event.target.value);// To fetch the input values
@@ -33,16 +35,18 @@ function App() {
   const handlePasswordChange = (event) => {
 	  setPassword(event.target.value);
   }
-  const handleTechStackChange = (index, value) => {
-    const updatedTechStacks = [...techStacks];
-    updatedTechStacks[index] = value;
-    setTechStacks(updatedTechStacks);
-  };
-
+  const handleTechStackChange = (e) => {
+    setTech(e.target.value);
+  }
   const handleAddTechStack = (e) => {
-    setTechStacks([...techStacks, '']); // Add a new empty tech stack input box
+    setTechStacks([...techStacks, techs]); // Add a new empty tech stack input box
+    setTech('');
   };
-
+  const handleRemoveTechStack = (ind) => {
+    const updatedTechStacks = [...techStacks];
+    updatedTechStacks.splice(ind, 1);
+    setTechStacks(updatedTechStacks);
+  }
   const handleExcelChange = (e) => {
     const fileTypes = [
       'application/vnd.ms-excel',
@@ -87,7 +91,7 @@ const handleResumeChange = (e) => {
         if (resumeFile) {
           const formData = new FormData();
           formData.append('resume', resumeFile);
-          const response = await axios.post("https://expressflash.onrender.com/uploadResume", formData);
+          const response = await axios.post("http://localhost:3001/uploadResume", formData);
           if (response.status) {
             setTypeSuccess('Resume file uploaded successfully!');
           } else {
@@ -119,7 +123,6 @@ const handleResumeChange = (e) => {
             }
             return null;// To Skip invalid/Incomplete data rows
           });
-          // setExcelData(excelDataArray); ??Check?? if commented, then no error or not
           resolve(excelDataArray);
         }
       } else {
@@ -127,7 +130,7 @@ const handleResumeChange = (e) => {
         reject('Null excelFile found');
       }
     } catch (error) {
-      // setTypeError(`Error during file upload: ${error}`);
+      setTypeError(`Error during file upload: ${error}`);
       reject("Error: " + error);
     }
   });
@@ -142,7 +145,7 @@ const handleResumeChange = (e) => {
     console.log(excelData);
     if (excelData) {
       // Send all Excel data to the server in a single request
-      await axios.post('https://expressflash.onrender.com/excelUpload', {
+      await axios.post('http://localhost:3001/excelUpload', {
         excelData,
         name:name,
         password: password,
@@ -174,10 +177,11 @@ const handleResumeChange = (e) => {
   };
   return (
     <div className="wrapper">
-      <h3>Upload & View Excel Sheets</h3>
+      <h2 style={{color:"green",textAlign:"center"}}>Upload & View Excel Sheets</h2>
+      <br></br>
       <form className="form-group custom-form" onSubmit={handleFileSubmit}>
       
-      <div className="form-control" htmlFor="password-upload">
+      <div className="" htmlFor="password-upload">
         <label>App Password</label>
       </div>
       <div className="form-beautify">
@@ -189,7 +193,7 @@ const handleResumeChange = (e) => {
             onChange={handlePasswordChange}
           />
       </div>
-      <div className="form-control" htmlFor="name-upload">
+      <div className="" htmlFor="name-upload">
         <label>Name</label>
       </div>
       <div className="form-beautify">
@@ -201,7 +205,7 @@ const handleResumeChange = (e) => {
             onChange={handleNameChange}
           />
       </div>
-      <div className="form-control" htmlFor="email-upload">
+      <div className="" htmlFor="email-upload">
         <label>Email</label>
       </div>
       <div className="form-beautify">
@@ -213,7 +217,7 @@ const handleResumeChange = (e) => {
             onChange={handleEmailChange}
           />
       </div>
-      <div className="form-control" htmlFor="yoe-upload">
+      <div className="" htmlFor="yoe-upload">
         <label>Years Of Experience</label>
       </div>
       <div className="form-beautify">
@@ -225,35 +229,47 @@ const handleResumeChange = (e) => {
             onChange={handleYoeChange}
           />
       </div>
-      <div className="form-control" htmlFor="currentCompany-upload">
+      <div className="" htmlFor="currentCompany-upload">
         <label>Current Company</label>
       </div>
       <div className="form-beautify">
-          <input
-            type="text"
-            name="currentCompany"
-            className="currentCompany-upload"
-            placeholder="Current Company.."
-            onChange={handleCurrentCompanyChange}
-          />
+        <input
+          type="text"
+          name="currentCompany"
+          className="currentCompany-upload"
+          placeholder="Current Company.."
+          onChange={handleCurrentCompanyChange}
+        />
       </div>
-      <div className="form-control" >
+
+      <div className="" >
         <label htmlFor="techStack-upload">Tech Stacks</label>
       </div>
-      {techStacks.map((tech, index) => (
-        <div key={index} className="form-beautify">
-          <input
-            type="text"
-            name={`techStack-${index}`}
-            className="techStack-upload"
-            placeholder="Tech Stack.."
-            value={tech}
-            onChange={(e) => handleTechStackChange(index, e.target.value)}
-          />
+      <div className="techStack-beautify">
+        <input 
+        type="text" 
+        id="techStack-upload" 
+        value={techs} 
+        placeholder='Add'
+        onChange={handleTechStackChange}/>
+        <div className="label-container" onClick={handleAddTechStack}>
+        + Add Tech Stack
         </div>
-      ))}
-      <button onClick={handleAddTechStack}>+ Add Tech Stack</button>
+      </div>
       
+      <div className=".text-box">
+        {techStacks.slice(1).map((tech, index) => (
+            <TextBox
+              key={index}
+              index={index + 1}
+              tech={tech}
+              onChange={handleTechStackChange}
+            />
+        ))}
+      </div>
+
+
+      <div className="upload-container">
         <label htmlFor="excel-upload" className="upload-btn">
           <span>Select Excel</span>
         </label>
@@ -264,6 +280,7 @@ const handleResumeChange = (e) => {
           required
           onChange={handleExcelChange}
         />
+        </div>
         <div className="alert alert-info">
           <div>
             <h3>Excel Details</h3>
@@ -311,6 +328,15 @@ const handleResumeChange = (e) => {
       
     </div>
   );
+  function TextBox({ index, tech }) {
+    return (
+      <div className={`text-box ${index % 2 === 0 ? 'even' : 'odd'}`}>
+        <div className="textbox-container">{tech}
+        <button onClick={() => handleRemoveTechStack(index)}>X</button>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;

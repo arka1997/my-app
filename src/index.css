@@ -22,9 +22,44 @@ body {
   margin-left: 200px;
 }
 
-@media screen and (max-width: 1200px) {
-  body {
-    overflow: visible;
+/* Media queries for responsiveness */
+@media only screen and (max-width: 768px) {
+  .form-group {
+    /* Adjust styles for tablets */
+    
+    width: 350px;
+    height: 250px;
+  }
+
+  .custom-form {
+    /* Adjust styles for tablets */
+    
+    width: 350px;
+    height: 250px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .form-group {
+    /* Adjust styles for mobile devices */
+    
+    height: 250px;
+    width: 350px;
+  }
+
+  .custom-form {
+    /* Adjust styles for mobile devices */
+    width: 350px;
+    height: 250px;
+  }
+  .wrapper{
+    width: 350px;
+    height: 250px;
+    border-radius: 25px;
+    padding: 20px;
+    margin: auto;
+    background-color: #e7e5e5;
+    box-shadow: 0 2px 2px 43px rgba(0,0,0,0.1);
   }
 }
 *{
@@ -34,27 +69,16 @@ body {
 }
 
 .wrapper{
+  
   border-radius: 25px;
   padding: 20px;
   margin: auto;
   background-color: #e7e5e5;
+  box-shadow: 0 2px 2px 43px rgba(0,0,0,0.1);
 }
 
 .custom-form{
-  width: 500px;
-}
-
-/* .btn{
-  margin: 10px 0;
-} */
-
-.viewer{
-  width: 100%;
-  background-color: #e4e4e4;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 550px;
 }
 
 .alert-danger{
@@ -74,8 +98,71 @@ body {
   background-image: linear-gradient(rgb(157, 226, 78), rgb(139, 248, 118), rgb(140, 225, 71));
 
 }
-.upload-container {
+
+
+
+
+
+
+.text-box {
+  margin-top: 5px;
+  padding: 2px;
+  border: 2px solid #3498db;
+  border-radius: 5px;
+  width: 150px;
+  background-color: #f0f0f0;
+  display: inline-block;
   text-align: center;
+}
+
+.text-box.odd {
+  background-color: #d6f3fa;
+}
+
+.text-box.even {
+  background-color: #e4f7b4;
+}
+
+.textbox-container {
+}
+.textbox-container button {
+  background-color: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 5px;
+}
+
+.textbox-container button:hover {
+  background-color: #c0392b;
+}
+
+
+
+
+
+.form-control {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.upload-container {
+  padding: 8px;
+}
+.label-container {
+  padding: 8px;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.label-container:hover {
+  background-color: #45a049; /* Change color on hover if desired */
 }
 
 .upload-btn {
@@ -100,7 +187,15 @@ body {
   margin-top: 10px;
   font-size: 14px;
 }
-
+/*Adding The styles for Tech Stack container*/
+.techStack-beautify input {
+  width: 50%;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
 .form{
   display: flex;
   flex-direction: column;
@@ -139,110 +234,3 @@ body {
   border-color: #007bff;
   outline: none;
 }
-
-
-/* ::selection{
-  color: #fff;
-  background: #6990F2;
-}
-.wrapper{
-  width: 430px;
-  background: #fff;
-  border-radius: 5px;
-  padding: 30px;
-  box-shadow: 7px 7px 12px rgba(0,0,0,0.05);
-}
-.wrapper header{
-  color: #6990F2;
-  font-size: 27px;
-  font-weight: 600;
-  text-align: center;
-}
-.wrapper form{
-  height: 167px;
-  display: flex;
-  cursor: pointer;
-  margin: 30px 0;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  border-radius: 5px;
-  border: 2px dashed #6990F2;
-}
-form :where(i, p){
-  color: #6990F2;
-}
-form i{
-  font-size: 50px;
-}
-form p{
-  margin-top: 15px;
-  font-size: 16px;
-}
-
-section .row{
-  margin-bottom: 10px;
-  background: #E9F0FF;
-  list-style: none;
-  padding: 15px 20px;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-section .row i{
-  color: #6990F2;
-  font-size: 30px;
-}
-section .details span{
-  font-size: 14px;
-}
-.progress-area .row .content{
-  width: 100%;
-  margin-left: 15px;
-}
-.progress-area .details{
-  display: flex;
-  align-items: center;
-  margin-bottom: 7px;
-  justify-content: space-between;
-}
-.progress-area .content .progress-bar{
-  height: 6px;
-  width: 100%;
-  margin-bottom: 4px;
-  background: #fff;
-  border-radius: 30px;
-}
-.content .progress-bar .progress{
-  height: 100%;
-  width: 0%;
-  background: #6990F2;
-  border-radius: inherit;
-}
-.uploaded-area{
-  max-height: 232px;
-  overflow-y: scroll;
-}
-.uploaded-area.onprogress{
-  max-height: 150px;
-}
-.uploaded-area::-webkit-scrollbar{
-  width: 0px;
-}
-.uploaded-area .row .content{
-  display: flex;
-  align-items: center;
-}
-.uploaded-area .row .details{
-  display: flex;
-  margin-left: 15px;
-  flex-direction: column;
-}
-.uploaded-area .row .details .size{
-  color: #404040;
-  font-size: 11px;
-}
-.uploaded-area i.fa-check{
-  font-size: 16px;
-} */
