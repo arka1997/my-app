@@ -177,71 +177,83 @@ const handleResumeChange = (e) => {
   };
   return (
     <div className="wrapper">
-      <h2 style={{color:"green",textAlign:"center"}}>Upload & View Excel Sheets</h2>
+    <div style={{backgroundColor:"#bcb9b9", padding:"5px", borderRadius:"30px"}}>
+      <h2 style={{color:"green",textAlign:"center",fontSize:"45px"}}>Upload & View Excel Sheets</h2>
+      </div>
       <br></br>
       <form className="form-group custom-form" onSubmit={handleFileSubmit}>
       
-      <div className="" htmlFor="password-upload">
-        <label>App Password</label>
+      <div className="form-responsive">
+        <div className="" htmlFor="password-upload">
+          <label>App Password</label>
+        </div>
+        <div className="form-beautify">
+            <input
+              type="password"
+              name="password"
+              className="password-upload"
+              placeholder="PASSWORD.."
+              onChange={handlePasswordChange}
+            />
+        </div>
       </div>
-      <div className="form-beautify">
-          <input
-            type="password"
-            name="password"
-            className="password-upload"
-            placeholder="PASSWORD.."
-            onChange={handlePasswordChange}
-          />
+      <div className="form-responsive">
+        <div className="" htmlFor="name-upload">
+          <label>Name</label>
+        </div>
+        <div className="form-beautify">
+            <input
+              type="text"
+              name="name"
+              className="name-upload"
+              placeholder="Your Name.."
+              onChange={handleNameChange}
+            />
+        </div>
       </div>
-      <div className="" htmlFor="name-upload">
-        <label>Name</label>
+      <div className="form-responsive">
+        <div className="" htmlFor="email-upload">
+          <label>Email</label>
+        </div>
+        <div className="form-beautify">
+            <input
+              type="email"
+              name="email"
+              className="email-upload"
+              placeholder="Your Email.."
+              onChange={handleEmailChange}
+            />
+        </div>
       </div>
-      <div className="form-beautify">
+      
+      <div className="form-responsive">
+        <div className="" htmlFor="yoe-upload">
+          <label>Years Of Experience</label>
+        </div>
+        <div className="form-beautify">
+            <input
+              type="number"
+              name="yoe"
+              className="yoe-upload"
+              placeholder="Years Of Experience.."
+              onChange={handleYoeChange}
+            />
+        </div>
+      </div>
+      <div className="form-responsive">
+        <div className="" htmlFor="currentCompany-upload">
+          <label>Current Company</label>
+        </div>
+        <div className="form-beautify">
           <input
             type="text"
-            name="name"
-            className="name-upload"
-            placeholder="Your Name.."
-            onChange={handleNameChange}
+            name="currentCompany"
+            className="currentCompany-upload"
+            placeholder="Current Company.."
+            onChange={handleCurrentCompanyChange}
           />
-      </div>
-      <div className="" htmlFor="email-upload">
-        <label>Email</label>
-      </div>
-      <div className="form-beautify">
-          <input
-            type="email"
-            name="email"
-            className="email-upload"
-            placeholder="Your Email.."
-            onChange={handleEmailChange}
-          />
-      </div>
-      <div className="" htmlFor="yoe-upload">
-        <label>Years Of Experience</label>
-      </div>
-      <div className="form-beautify">
-          <input
-            type="number"
-            name="yoe"
-            className="yoe-upload"
-            placeholder="Years Of Experience.."
-            onChange={handleYoeChange}
-          />
-      </div>
-      <div className="" htmlFor="currentCompany-upload">
-        <label>Current Company</label>
-      </div>
-      <div className="form-beautify">
-        <input
-          type="text"
-          name="currentCompany"
-          className="currentCompany-upload"
-          placeholder="Current Company.."
-          onChange={handleCurrentCompanyChange}
-        />
-      </div>
-
+        </div>
+    </div>
       <div className="" >
         <label htmlFor="techStack-upload">Tech Stacks</label>
       </div>
@@ -252,8 +264,7 @@ const handleResumeChange = (e) => {
         value={techs} 
         placeholder='Add'
         onChange={handleTechStackChange}/>
-        <div className="label-container" onClick={handleAddTechStack}>
-        + Add Tech Stack
+        <div className="add-button-with-image add-btn" onClick={handleAddTechStack}>
         </div>
       </div>
       
@@ -267,11 +278,11 @@ const handleResumeChange = (e) => {
             />
         ))}
       </div>
-
-
-      <div className="upload-container">
-        <label htmlFor="excel-upload" className="upload-btn">
-          <span>Select Excel</span>
+      <div style={{marginTop:"30px"}}className="" htmlFor="currentCompany-upload">
+          <label>Excel Upload</label>
+        </div>
+        <label htmlFor="excel-upload" className="excel-button-with-image upload-btn">
+          <span ></span>
         </label>
         <input
           type="file"
@@ -280,7 +291,6 @@ const handleResumeChange = (e) => {
           required
           onChange={handleExcelChange}
         />
-        </div>
         <div className="alert alert-info">
           <div>
             <h3>Excel Details</h3>
@@ -295,8 +305,13 @@ const handleResumeChange = (e) => {
             <li>{excelSize}</li>
           </div>
         </div>
-        <label htmlFor="resume-upload" className="upload-btn">
-          <span>Select Resume</span>
+
+        <div className="form-responsive">
+        <div className="" htmlFor="currentCompany-upload">
+          <label>Resume Upload</label>
+        </div>
+        <label htmlFor="resume-upload" className="resume-button-with-image upload-btn">
+          <span></span>
         </label>
         <input
               type="file"
@@ -310,10 +325,13 @@ const handleResumeChange = (e) => {
               {resumeFile
                 ? `Selected file: ${resumeFile.name}`
                 : 'No file selected'}
-            </p> 
-        <button type="submit" className="btn btn-success btn-lg">
-          UPLOAD
-        </button>
+            </p>
+        </div>
+        <button type="submit" className="btn btn-success save-button-with-image save-btn"></button>
+        <div>
+          <label>Don't Think, Just Upload</label>
+        </div>
+
         {typeError && (
           <div className="alert alert-danger" role="alert">
             {typeError}
@@ -331,8 +349,9 @@ const handleResumeChange = (e) => {
   function TextBox({ index, tech }) {
     return (
       <div className={`text-box ${index % 2 === 0 ? 'even' : 'odd'}`}>
-        <div className="textbox-container">{tech}
-        <button onClick={() => handleRemoveTechStack(index)}>X</button>
+        <div className="textbox-container">{tech}</div>
+        <div>
+        <button className="deleteStack-button-with-image" onClick={() => handleRemoveTechStack(index)}></button>
         </div>
       </div>
     );
