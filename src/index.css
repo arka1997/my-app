@@ -8,8 +8,132 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-family: 'Oswald', sans-serif !important;
   background: #c5d6ff;
+  margin:5%;
+  padding:5%;
+}
+.info-icon {
+  cursor: pointer;
+  display: inline-block;
+  margin-left: 5px; /* Adjust spacing as needed */
+  font-size: 18px; /* Adjust size as needed */
+  color: #3498db; /* Choose a color that contrasts well with your background */
+  animation: pulse 1s infinite;
 }
 
+.info-icon:hover {
+  color: #2980b9; /* Change color on hover if desired */
+}
+
+span.absolute-icon {
+  position: absolute;
+  height: 1.5rem; /* Equivalent to h-6 in Tailwind */
+  width: 1.5rem;  /* Equivalent to w-6 in Tailwind */
+  display: relative;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  right: 0;
+  border: 2px solid #3498db; /* Equivalent to ring ring-blue-500 in Tailwind */
+  border-radius: 50%; /* Equivalent to rounded-full in Tailwind */
+  animation: pulse 1s infinite; /* Equivalent to animate-pulse in Tailwind */
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.modalBox{
+  position: relative;
+  border-radius: 10px;
+}
+.modalUI{
+  padding: 2%;
+  border: 2px solid #eae4e4;
+  border-radius: 10px;
+}
+/* Style for the paragraph container */
+.message-container {
+  padding: 20px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+}
+
+/* Style for each paragraph */
+.message-container p {
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.deleteModal{
+  background-color: rgb(246, 235, 200);
+  position: flex;
+  display: inline-block;
+  padding: 10px 10px;
+  color: #222a01;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(1, 1, 1, 0.1);
+  border-radius: 5px;
+  overflow: hidden; /* Hide overflow from the pseudo-element */
+}
+.deleteModal::before {
+  content: '';
+  position: absolute;
+  transform: translate(410%, -10%);
+  width: 15%; /* Adjust the width to fill the button */
+  height: 15%; /* Adjust the height to fill the button */
+  background-image: url('/src/assets/images/talentDispatchimg/delete2.png');
+  background-size:contain;
+  background-repeat: no-repeat;
+}
+
+.deleteModal p {
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+/* Add responsiveness for smaller screens */
+@media (max-width: 400px) {
+  .deleteModal {
+    max-width: 90%;
+  }
+}
+.deleteExcelModal p {
+  margin-bottom: 10px;
+  line-height: 1.5;
+  justify-content: left;
+}
+.sendMail{
+  margin-top: 2%;
+  display: flex;
+  flex-direction: column-reverse; /* Reverse the order vertically */
+  align-items: center;
+}
+.deleteExcelModal{
+  background-color: rgb(246, 235, 200);
+  position: flex;
+  display: inline-block;
+  padding: 10px 40px;
+  color: #222a01;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(1, 1, 1, 0.1);
+  border-radius: 5px;
+  overflow: hidden; /* Hide overflow from the pseudo-element */
+}
+.deleteExcelModal::before {
+  content: '';
+  position: absolute;
+  transform: translate(135%, -10%);
+  width: 20%; /* Adjust the width to fill the button */
+  height: 15%; /* Adjust the height to fill the button */
+  background-image: url('/src/assets/images/talentDispatchimg/delete2.png');
+  background-size:contain;
+  background-repeat: no-repeat;
+}
 .wrapper{
   max-width: 800px;
   border-radius: 25px;
@@ -57,7 +181,6 @@ body {
   background-image: linear-gradient(rgb(157, 226, 78), rgb(139, 248, 118), rgb(140, 225, 71));
 
 }
-
 
 
 
@@ -134,6 +257,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
 }
+
 .deleteStack-button-with-image:hover{
   background-color: #daeaf4;
   border-color: #bee0f6;
@@ -224,7 +348,6 @@ body {
   background-repeat: no-repeat;
 }
 .save-btn{
-  margin-top: 50px;
   display: inline-block;
   padding: 30px 70px;
   background-color: #406eec;
@@ -240,9 +363,7 @@ body {
   flex-direction: row;
   align-items: center;
 }
-.upload-container {
-  /* mar */
-}
+
 
 /* Fod Add Tech Stack Button */
 .label-container {
@@ -295,6 +416,16 @@ body {
 
 @media only screen and (max-width: 768px) {
   
+  .deleteExcelModal::before {
+    content: '';
+    position: absolute;
+    transform: translate(345%, -10%);
+    width: 20%; /* Adjust the width to fill the button */
+    height: 15%; /* Adjust the height to fill the button */
+    background-image: url('/src/assets/images/talentDispatchimg/delete2.png');
+    background-size:contain;
+    background-repeat: no-repeat;
+  }
   .form__group {
     .wrapper{               
     border-radius: 25px;
@@ -319,7 +450,16 @@ body {
 }
 
 @media only screen and (max-width: 480px) {
-  
+  .deleteExcelModal::before {
+    content: '';
+    position: absolute;
+    transform: translate(335%, -10%);
+    width: 20%; /* Adjust the width to fill the button */
+    height: 15%; /* Adjust the height to fill the button */
+    background-image: url('/src/assets/images/talentDispatchimg/delete2.png');
+    background-size:contain;
+    background-repeat: no-repeat;
+  }
   .wrapper{
     .upload-btn {
       display: inline-block;
@@ -379,6 +519,7 @@ body {
     border-radius: 5px;
     overflow: hidden; /* Hide overflow from the pseudo-element */
   }
+  
 }
 
 .hidden {

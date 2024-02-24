@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
 import axios from 'axios';
+import ModalPassword from "./demo_code/ModalPassword";
+import ModalExcel from "./demo_code/ModalExcel";
 
 function App() {
   const [excelType, setExcelType] = useState(null);
@@ -20,6 +22,22 @@ function App() {
   const [techs, setTech] = useState('');
   const [techStacks, setTechStacks] = useState(["Techs like"]);
 
+  const [isOpen, setOpen] = useState(false);
+  
+  const [isExcelOpen, setExcelOpen] = useState(false);
+
+  const handleOpen = (message) => {
+    setOpen(true);
+  };
+  const handleClose = (message) => {
+    setOpen(false);
+  };
+  const handleModalExcelOpen = (message) => {
+    setExcelOpen(true);
+  };
+  const handleModalExcelClose = (message) => {
+    setExcelOpen(false);
+  };
   const handleNameChange = (event) => {
 	  setName(event.target.value);// To fetch the input values
   }
@@ -127,11 +145,11 @@ const handleResumeChange = (e) => {
         }
       } else {
         setTypeError('Null excelFile found');
-        reject('Null excelFile found');
+        reject();
       }
     } catch (error) {
       setTypeError(`Error during file upload: ${error}`);
-      reject("Error: " + error);
+      reject(error);
     }
   });
   };
@@ -164,8 +182,8 @@ const handleResumeChange = (e) => {
     .then(() =>{
       return uploadTechStack()
     })
-    .then((loadedData) =>{
-      return uploadExcel(loadedData)
+    .then(() =>{
+      return uploadExcel()
     })
     .then((loadedData) =>{
       return uploadDetailsToServer(loadedData)
@@ -177,26 +195,46 @@ const handleResumeChange = (e) => {
   };
   return (
     <div className="wrapper">
-    <div style={{backgroundColor:"#bcb9b9", padding:"5px", borderRadius:"30px"}}>
-      <h2 style={{color:"green",textAlign:"center",fontSize:"45px"}}>Upload & View Excel Sheets</h2>
-      </div>
+    <div style={{ backgroundColor: "#dcd9d9", padding: "20px", borderRadius: "30px", textAlign: "center" }}>
+      <h2 style={{ color: "green", fontSize: "45px", margin: "0" }}>Cover Letter Generating Form</h2>
+    </div>
       <br></br>
       <form className="form-group custom-form" onSubmit={handleFileSubmit}>
       
       <div className="form-responsive">
-        <div className="" htmlFor="password-upload">
-          <label>App Password</label>
-        </div>
-        <div className="form-beautify">
-            <input
-              type="password"
-              name="password"
-              className="password-upload"
-              placeholder="PASSWORD.."
-              onChange={handlePasswordChange}
-            />
-        </div>
+      <div className="popUpMessage" htmlFor="password-upload">
+        <label>
+          Gmail App Password
+          <span className="relative inline-block">
+           <span className="info-icon" onClick={handleOpen}>
+              ?
+            </span>
+            <span className="absolute-icon"></span>
+          </span>
+        </label>
       </div>
+      <div className="form-beautify">
+        <input
+          type="password"
+          name="password"
+          className="password-upload"
+          placeholder="PASSWORD.."
+          onChange={handlePasswordChange}
+        />
+      <ModalPassword isOpen={isOpen} onClose={handleClose}>
+          <div className="deleteModal message-container">
+            <p>Go to Manage Your Google Account:</p>
+              <ul>
+                <li>Security</li>
+                <li>2-step Verification</li>
+                <li>App passwords</li>
+              </ul>
+            <p>Type “node mailer” as the key, and it will generate a password. It’s for the security of your account.</p>
+          </div>
+      </ModalPassword>
+      </div>
+      
+    </div>
       <div className="form-responsive">
         <div className="" htmlFor="name-upload">
           <label>Name</label>
@@ -279,8 +317,26 @@ const handleResumeChange = (e) => {
         ))}
       </div>
       <div style={{marginTop:"30px"}}className="" htmlFor="currentCompany-upload">
-          <label>Excel Upload</label>
-        </div>
+          <label>Excel Upload<span className="relative inline-block">
+            <span className="info-icon" onClick={handleModalExcelOpen}>
+                ?
+              </span>
+              <span className="absolute-icon"></span>
+            </span>
+          </label>
+          <ModalExcel isOpen={isExcelOpen} onClose={handleModalExcelClose}>
+              <div className=" message-excel-container">
+              <div className="deleteExcelModal">
+                <p>Please Attach 3 requirements in excel:</p>
+                  <ul>
+                    <li>HR Mail</li>
+                    <li>Company Applying For</li>
+                    <li>Position Applying For</li>
+                  </ul>
+                  </div>
+              </div>
+          </ModalExcel>
+      </div>
         <label htmlFor="excel-upload" className="excel-button-with-image upload-btn">
           <span ></span>
         </label>
@@ -327,9 +383,10 @@ const handleResumeChange = (e) => {
                 : 'No file selected'}
             </p>
         </div>
-        <button type="submit" className="btn btn-success save-button-with-image save-btn"></button>
-        <div>
-          <label>Don't Think, Just Upload</label>
+        <div className="sendMail">
+        <button type="submit"  className="btn btn-success save-button-with-image save-btn"></button>
+        
+          <label style={{float:"left"}}>Don't Think, Just Upload</label>
         </div>
 
         {typeError && (
