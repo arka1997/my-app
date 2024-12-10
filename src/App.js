@@ -109,14 +109,14 @@ const handleResumeChange = (e) => {
         if (resumeFile) {
           const formData = new FormData();
           formData.append('resume', resumeFile);
-          const response = await axios.post("https://expressflash.onrender.com/uploadResume", formData);
+          const response = await axios.post("http://localhost:3001/uploadResume", formData);
           if (response.status) {
             setTypeSuccess('Resume file uploaded successfully!');
           } else {
             console.error('Failed to upload resume file.');
           }
         }
-      }catch(error){
+      } catch(error){
         setTypeError('Error during file upload:', error);
       }
     }
@@ -131,11 +131,11 @@ const handleResumeChange = (e) => {
         const data = XLSX.utils.sheet_to_json(worksheet);
         if (data && data.length > 0) {
           const excelDataArray = data.map((individualExcelData) => {
-            const { company_name, email_of_employees, role} = individualExcelData;
-            if (company_name && email_of_employees && role) {
+            const { company_name, email, role} = individualExcelData;
+            if (company_name && email && role) {
               return {
                 company_name,
-                email_of_employees,
+                email,
                 role,
               }
             }
@@ -160,10 +160,9 @@ const handleResumeChange = (e) => {
   }
 
   const uploadDetailsToServer = async (excelData) => {
-    console.log(excelData);
     if (excelData) {
       // Send all Excel data to the server in a single request
-      await axios.post('https://expressflash.onrender.com/excelUpload', {
+      await axios.post('http://localhost:3001/excelUpload', {
         excelData,
         name:name,
         password: password,
