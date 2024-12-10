@@ -327,11 +327,11 @@ const handleResumeChange = (e) => {
           <ModalExcel isOpen={isExcelOpen} onClose={handleModalExcelClose}>
               <div className=" message-excel-container">
               <div className="deleteExcelModal">
-                <p>Please Attach 3 requirements in excel:</p>
+                <p>Please Attach 3 requirements in excel with sane column names:</p>
                   <ul>
-                    <li>HR Mail</li>
-                    <li>Company Applying For</li>
-                    <li>Position Applying For</li>
+                  <li>company_name</li>
+                    <li>email</li>
+                    <li>role</li>
                   </ul>
                   </div>
               </div>
